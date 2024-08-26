@@ -1,0 +1,177 @@
+<div class="sb-nav-fixed">
+    <app-nav></app-nav>
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_content">
+  
+        <div class="container-fluid px-4">
+          <h1 class="mt-4">Gestión de Actividades</h1>
+          <div class="alert alert-info" *ngIf="user?.rol">
+            <strong>Rol actual:</strong> {{ user?.rol }}
+          </div>
+  
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Inicio</li>
+          </ol>
+  
+          <!-- Mostrar actividades para usuarios entrenados -->
+            <div *ngIf="user?.rol === 'entrenado'" class="card mb-4">
+                <div class="card-header">
+                <i class="fas fa-tasks me-1"></i>
+                Mis Actividades por Sesión
+                </div>
+                <div class="card-body">
+                <div class="container">
+                    <div class="row">
+                    <div class="col-sm-12">
+                    
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="col-sm-2">Nombre de la Sesión</th>
+                                <th class="col-sm-2">Nombre de la Actividad</th>
+                                <th class="col-sm-2">Descripción</th>
+                                <th class="col-sm-2">Instrucciones</th>
+                                <th class="col-sm-2">Tipo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ng-container *ngFor="let session of userSessions">
+                                <!-- Se repite la fila para cada actividad en la sesión -->
+                                <tr *ngFor="let activity of session.activities">
+                                <td  class="col-sm-2" >
+                                    {{ session.name }}
+                                </td>
+                                <td class="col-sm-2">
+                                    <i>{{ activity.name }}</i>
+                                </td>
+                                <td class="col-sm-2">
+                                    <i>{{ activity.description }}</i>
+                                </td>
+                                <td class="col-sm-2">
+                                    <i>{{ activity.instruction }}</i>
+                                </td>
+                                <td class="col-sm-2">
+                                    <i>{{ activity.type }}</i>
+                                </td>
+                                </tr>
+                            </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+  
+
+  
+  
+          <!-- Formulario de creación de sesión para otros roles -->
+          <div *ngIf="user?.rol !== 'entrenado'" class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-plus-circle me-1"></i>
+              Crear Nueva Actividad
+            </div>
+            <div class="card-body">
+              <form id="sessionForm" (ngSubmit)="onSubmit()" #sessionForm="ngForm">
+                <div class="mb-3">
+                  <label for="activityName" class="form-label">Nombre de la Actividad</label>
+                  <input type="text" class="form-control" id="activityName" name="activityName" [(ngModel)]="activityName"
+                    required>
+                </div>
+                <div class="mb-3">
+                  <label for="activityDescription" class="form-label">Descripción</label>
+                  <input type="text" class="form-control" id="activityDescription" name="activityDescription"
+                    [(ngModel)]="activityDescription" required>
+                </div>
+                <div class="mb-3">
+                  <label for="activityInstruction" class="form-label">Instrucciones</label>
+                  <textarea class="form-control" id="activityInstruction" name="activityInstruction"
+                    [(ngModel)]="activityInstruction" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="activityOrder" class="form-label">Orden en la Sesión</label>
+                  <input type="number" class="form-control" id="activityOrder" name="activityOrder"
+                    [(ngModel)]="activityOrder" required>
+                </div>
+                <div class="mb-3">
+                  <label for="taskId" class="form-label">ID de la Tarea</label>
+                  <input type="text" class="form-control" id="taskId" name="taskId" [(ngModel)]="taskId" required>
+                </div>
+                <div class="mb-3">
+                  <label for="activityType" class="form-label">Tipo de Actividad</label>
+                  <select class="form-select" id="activityType" [(ngModel)]="activityType" name="activityType" required>
+                    <option [value]="TEXT_COMPLETE">Texto Completo</option>
+                    <option [value]="WORDS">Palabras Sueltas</option>
+                  </select>
+                </div>
+  
+                <button type="submit" class="btn btn-primary">Crear Actividad</button>
+              </form>
+            </div>
+          </div>
+  
+          <!-- Tabla de Actividades para otros roles -->
+          <div class="card mb-4" *ngIf="user?.rol !== 'entrenado'">
+            <div class="card-header">
+              <i class="fas fa-list me-1"></i>
+              Actividades Existentes
+            </div>
+            <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr class="row">
+                          <th class="col-sm-1">Seleccionar</th>
+                          <th class="col-sm-1">Nombre</th>
+                          <th class="col-sm-2">Descripción</th>
+                          <th class="col-sm-2">Instrucciones</th>
+                          <th class="col-sm-1">Orden</th>
+                          <th class="col-sm-1">Items</th>
+                          <th class="col-sm-2">Tipo</th>
+                          <th class="col-sm-1">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let activity of activities" class="row">
+                          <td class="col-sm-1">
+                            <input type="checkbox" [value]="activity.id"
+                              (change)="onCheckboxChange($event, activity.id)">
+                          </td>
+                          <td class="col-sm-1"><i>{{ activity.name }}</i></td>
+                          <td class="col-sm-2"><i>{{ activity.description }}</i></td>
+                          <td class="col-sm-2"><i>{{ activity.instruction }}</i></td>
+                          <td class="col-sm-1"><i>{{ activity.order_in_session }}</i></td>
+                          <td class="col-sm-1">
+                            <i *ngFor="let item of activity.items">{{ item.id }} </i>
+                          </td>
+                          <td class="col-sm-2"><i>{{ activity.type }}</i></td>
+                          <td class="col-sm-1">
+                            <fieldset class="form-group col-sm-1">
+                              <button class="btn btn-info">Editar</button>
+                            </fieldset>
+                          </td>
+                          <td class="col-sm-1">
+                            <fieldset class="form-group col-sm-1">
+                              <a class="btn btn-danger">Borrar</a>
+                            </fieldset>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+
+  

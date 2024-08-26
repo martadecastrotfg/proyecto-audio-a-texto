@@ -1,0 +1,96 @@
+<div class="sb-nav-fixed">
+  <app-nav></app-nav>
+  <div id="layoutSidenav">
+      <div id="layoutSidenav_content">
+
+          <div class="container-fluid px-4">
+              <h1 class="mt-4">Gestión de Actividades</h1>
+              <ol class="breadcrumb mb-4">
+                  <li class="breadcrumb-item active">Inicio</li>
+              </ol>
+
+              <!-- Formulario de Subida de Tarea -->
+              <div class="card mb-4">
+                  <div class="card-header">
+                      <i class="fas fa-upload me-1"></i>
+                      Subir Nueva Tarea
+                  </div>
+                  <div class="card-body">
+                      <form (ngSubmit)="onSubmitZip()" #zipForm="ngForm">
+                          <div class="mb-3">
+                              <label for="nombre" class="form-label">Nombre de la tarea</label>
+                              <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="nombre" required>
+                          </div>
+                          <div class="mb-3">
+                              <label for="descripcion" class="form-label">Descripción</label>
+                              <textarea class="form-control" id="descripcion" name="descripcion" [(ngModel)]="descripcion" rows="3"></textarea>
+                          </div>
+                          <div class="mb-3">
+                              <label for="file" class="form-label">Archivo ZIP</label>
+                              <input type="file" class="form-control" id="file" (change)="onZipFileChange($event)" accept=".zip" required>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Subir ZIP</button>
+                      </form>
+                  </div>
+              </div>
+
+              <!-- Mostrar los archivos descomprimidos -->
+              <div class="card mb-4" *ngIf="archivos.length > 0">
+                  <div class="card-header">
+                      <i class="fas fa-folder-open me-1"></i>
+                      Archivos Descomprimidos
+                  </div>
+                  <div class="card-body">
+                      <ul class="list-group">
+                          <li class="list-group-item" *ngFor="let archivo of archivos">
+                              {{ archivo }}
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+
+              <!-- Cargar y Analizar el archivo WAV -->
+              <div class="card mb-4">
+                  <div class="card-header">
+                      <i class="fas fa-music me-1"></i>
+                      Analizar Archivo WAV
+                  </div>
+                  <div class="card-body">
+                      <div class="mb-3">
+                          <label for="wavFile" class="form-label">Selecciona archivo WAV</label>
+                          <input type="file" class="form-control" id="wavFile" (change)="onWavFileChange($event)" accept=".wav">
+                      </div>
+
+                      <div *ngIf="selectedWavFile && taskId">
+                          <h5>Archivo seleccionado para analizar: {{ selectedWavFile.name }}</h5>
+                          <button class="btn btn-success" (click)="onAnalizar()">Analizar WAV</button>
+                      </div>
+                  </div>
+              </div>
+
+              <!-- Mostrar el resultado del análisis -->
+              <div class="card mb-4" *ngIf="resultado">
+                  <div class="card-header">
+                      <i class="fas fa-chart-bar me-1"></i>
+                      Resultado del Análisis
+                  </div>
+                  <div class="card-body">
+                      <pre>{{ resultado | json }}</pre>
+                  </div>
+              </div>
+
+              <!-- Mostrar error -->
+              <div class="card mb-4" *ngIf="error">
+                  <div class="card-header">
+                      <i class="fas fa-exclamation-triangle me-1"></i>
+                      Error
+                  </div>
+                  <div class="card-body">
+                      <pre>{{ error }}</pre>
+                  </div>
+              </div>
+
+          </div>
+      </div>
+  </div>
+</div>

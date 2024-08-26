@@ -1,0 +1,84 @@
+<!-- <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+        <label>Nombre</label>
+        <input type="text" class="form-control" formControlName="first_name">
+    </div>
+    <div class="mb-3">
+        <label>Apellido</label>
+        <input type="text" class="form-control" formControlName="last_name">
+    </div>
+    <div class="mb-3">
+        <label>Username</label>
+        <input type="text" class="form-control" formControlName="username">
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" class="form-control" formControlName="email">
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" class="form-control" formControlName="password">
+    </div>
+    <input type="submit" value="Enviar" class="btn btn-info">
+</form> -->
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Crear Cuenta</h3></div>
+                                <div class="card-body">
+                                    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputFirstName" type="text" placeholder="Introduce tu nombre" formControlName="first_name"/>
+                                                    <label for="inputFirstName">Nombre</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="inputLastName" type="text" placeholder="Introduce tu apellido" formControlName="last_name"/>
+                                                    <label for="inputLastName">Apellido</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" formControlName="email"/>
+                                            <label for="inputEmail">Email</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputUsername" type="text" placeholder="Introduce el usuario" formControlName="username"/>
+                                                    <label for="inputUsername">Usuario</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPassword" type="password" placeholder="Introduce la Contraseña" formControlName="password"/>
+                                                    <label for="inputPassword">Password</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 mb-0">
+                                            <input type="submit" value="Crear" class="btn btn-primary btn-block" href="/iniciasesion">
+                                            <!-- <div class="d-grid"><a class="btn btn-primary btn-block" href="login.html">Create Account</a></div> -->
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="/iniciasesion">¿Ya tienes cuenta? INICIA SESIÓN</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,75 @@
+<div class="sb-nav-fixed">
+  <app-nav></app-nav>
+
+<div id="layoutSidenav">
+  <div id="layoutSidenav_content">
+    <main>
+      <div class="container-fluid px-4">
+        <h1 class="mt-4">Gestión de Usuarios</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Inicio</li>
+        </ol>
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Tabla de Usuarios
+          </div>
+          <div class="card-body">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <form class="form-inline">
+                    <fieldset class="form-group col-sm-11"></fieldset>
+                    <fieldset class="form-group col-sm-12 d-flex align-items-center">
+                      <a class="btn btn-primary btn-custom" [routerLink]="['/usuarios/agregar']">+</a>
+                      <button id="btnEliminarSeleccionados" type="button" class="btn btn-primary btn-custom ms-2" (click)="eliminarSeleccionados()">Eliminar</button>
+                    </fieldset>
+                    
+                  </form>
+                  <br>
+                  <table id="tablaUsuarios" class="table table-striped">
+
+                    <thead>
+                      <tr class="row">
+                        <th class="col-sm-1">Seleccionar</th>
+                        <th class="col-sm-1">ID</th>
+                        <th class="col-sm-2">Nombre de Usuario (Glifing)</th>
+                        <th class="col-sm-2">Nombre</th>
+                        <th class="col-sm-2">Apellidos</th>
+                        <th class="col-sm-2">Rol</th>
+                        <th class="col-sm-2">Acciones</th>
+                      </tr>
+
+                    </thead>
+            
+                    <tbody>
+                      <tr *ngFor="let usuario of usuarios" class="row">
+                        <td class="col-sm-1"><input type="checkbox" [value]="usuario.id" (change)="onCheckboxChange($event, usuario.id)"></td>
+                        <td class="col-sm-1"><i>{{ usuario.id }}</i></td>
+                        <td class="col-sm-2"><i>{{ usuario.username}}</i></td>
+                        <td class="col-sm-2"><i>{{ usuario.first_name }}</i></td>
+                        <td class="col-sm-2"><i>{{ usuario.last_name }}</i></td>
+                        <td class="col-sm-2"><i>{{ usuario.rol }}</i></td>
+                        <td class="col-sm-1">
+                          <fieldset class="form-group col-sm-1">
+                            <a class="btn btn-info" [routerLink]="['/usuarios/editar/', usuario.id]">Editar</a>
+                          </fieldset>
+                        </td>
+                        <td class="col-sm-1">
+                          <fieldset class="form-group col-sm-1">
+                            <a class="btn btn-danger" (click)="borrarUsuario(usuario.id)">Borrar</a>
+                          </fieldset>
+                        </td>
+                      </tr>
+                    </tbody>     
+                  </table> 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div> 
+    </main>
+  </div>
+</div>
+</div>

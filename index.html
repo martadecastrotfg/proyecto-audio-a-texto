@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Plataforma de gestión de usuarios y actividades" />
+    <meta name="author" content="Equipo de Desarrollo" />
+    <title>Gestión de Usuarios - Plataforma de Lectura</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.html">Inicio</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Buscar..." aria-label="Buscar..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Ajustes</a></li>
+                    <li><a class="dropdown-item" href="#!">Actividad de la cuenta</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="login.html">Salir</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Principal</div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Inicio
+                        </a>
+                        <a class="nav-link" href="sesiones.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            Sesiones
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Bienvenido, Admin</div>
+                    Gestión de Usuarios
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Gestión de Usuarios</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Inicio</li>
+                    </ol>
+
+                    <!-- Formulario de alta -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Formulario de Alta de Usuario
+                        </div>
+                        <div class="card-body">
+                            <div class="div-formulario">
+                                <h2>Registrar Usuario</h2>
+                                <form action="#" id="formulario">
+                                    <input type="text" id="user" placeholder="Nombre de Usuario (nombre.apellido)" required>
+                                    <input type="text" id="usernameGlifing" placeholder="Usuario Glifing (opcional)">
+                                    <input type="text" id="nombre" placeholder="Nombre" required>
+                                    <input type="text" id="apellido" placeholder="Apellidos" required>
+                                    <input type="email" id="correo" placeholder="Correo Electrónico" required>
+                                    <input type="password" id="password" placeholder="Contraseña" required>
+                                    <input type="file" id="avatar" accept="image/*" placeholder="Avatar">
+                                    <select id="rol" required>
+                                        <option value="" disabled selected>Seleccione un rol</option>
+                                        <option value="administrador">Administrador</option>
+                                        <option value="editor">Editor</option>
+                                        <option value="entrenado">Entrenado</option>
+                                    </select>
+                                    <div id="camposEntrenado" style="display: none;">
+                                        <h3>Entrenamientos</h3>
+                                        <div id="entrenamientos">
+                                            <div class="entrenamiento">
+                                                <input type="text" class="cursoId" placeholder="ID del Curso">
+                                                <input type="date" class="fechaEntrenamiento" placeholder="Fecha de Entrenamiento">
+                                                <button type="button" class="btnEliminarEntrenamiento btn btn-danger btn-sm">Eliminar</button>
+                                            </div>
+                                        </div>
+                                        <button type="button" id="btnAgregarEntrenamiento" class="btn btn-success btn-sm">Agregar entrenamiento</button>
+                                    </div>
+                                    <button type="submit" id="btnAgregar" class="btn btn-primary mt-3">Agregar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de usuarios -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Tabla de Usuarios
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-danger mb-2" id="btnEliminarSeleccionados">Eliminar Seleccionados</button>
+                            <table id="tablaUsuarios" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de Usuario</th>
+                                        <th>Usuario Glifing</th>
+                                        <th>Nombre</th>
+                                        <th>Apellidos</th>
+                                        <th>Correo Electrónico</th>
+                                        <th>Avatar</th>
+                                        <th>Rol</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Contenido dinámico de la tabla -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Detalle de usuario -->
+                    <div id="detalleUsuario" style="display: none;">
+                        <div class="card">
+                            <h5 class="card-header">Mostrar Usuario</h5>
+                            <div class="card-body" id="infoUsuario">
+                                <div class="row">
+                                    <div class="col-md-6" id="columna1">
+                                        <!-- Aquí se mostrará la información del usuario en la primera columna -->
+                                    </div>
+                                    <div class="col-md-6" id="columna2">
+                                        <!-- Aquí se mostrará la información del usuario en la segunda columna -->
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary" id="btnSalirEdicion">Salir</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edición de usuario -->
+                    <div id="edicionUsuario" style="display: none;">
+                        <div class="card">
+                            <h5 class="card-header">Editar Usuario</h5>
+                            <div class="card-body" id="infoEdicionUsuario">
+                                <div class="row">
+                                    <div class="col-md-6" id="columna1Edicion">
+                                        <!-- Aquí se mostrarán los campos para editar la información en la primera columna -->
+                                    </div>
+                                    <div class="col-md-6" id="columna2Edicion">
+                                        <!-- Aquí se mostrarán los campos para editar la información en la segunda columna -->
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="btnGuardarEdicion">Guardar</button>
+                                <button type="button" class="btn btn-secondary" id="btnCancelarEdicion">Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Pie de página -->
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                        <div>
+                            <a href="#">Política de Privacidad</a>
+                            &middot;
+                            <a href="#">Términos y Condiciones</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <!-- <script src="js/datatables-simple-demo.js"></script> -->
+    <script>
+        // Script para manejar la tabla y los formularios
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const usuarios = [
+                { user: 'juan.perez', usernameGlifing: 'jperez', nombre: 'Juan', apellido: 'Perez', correo: 'juan@example.com', rol: 'entrenado' },
+                { user: 'maria.lopez', usernameGlifing: 'mlopez', nombre: 'Maria', apellido: 'Lopez', correo: 'maria@example.com', rol: 'editor' },
+                { user: 'carlos.gomez', usernameGlifing: 'cgomez', nombre: 'Carlos', apellido: 'Gomez', correo: 'carlos@example.com', rol: 'administrador' },
+                { user: 'ana.ramirez', usernameGlifing: 'aramirez', nombre: 'Ana', apellido: 'Ramirez', correo: 'ana@example.com', rol: 'entrenado' },
+                { user: 'luis.martinez', usernameGlifing: 'lmartinez', nombre: 'Luis', apellido: 'Martinez', correo: 'luis@example.com', rol: 'editor' },
+                { user: 'marta.sanchez', usernameGlifing: 'msanchez', nombre: 'Marta', apellido: 'Sanchez', correo: 'marta@example.com', rol: 'entrenado' },
+                { user: 'jose.diaz', usernameGlifing: 'jdiaz', nombre: 'Jose', apellido: 'Diaz', correo: 'jose@example.com', rol: 'administrador' },
+                { user: 'laura.garcia', usernameGlifing: 'lgarcia', nombre: 'Laura', apellido: 'Garcia', correo: 'laura@example.com', rol: 'entrenado' },
+                { user: 'francisco.fernandez', usernameGlifing: 'ffernandez', nombre: 'Francisco', apellido: 'Fernandez', correo: 'francisco@example.com', rol: 'editor' },
+                { user: 'sara.moreno', usernameGlifing: 'smoreno', nombre: 'Sara', apellido: 'Moreno', correo: 'sara@example.com', rol: 'entrenado' },
+                { user: 'miguel.ruiz', usernameGlifing: 'mruiz', nombre: 'Miguel', apellido: 'Ruiz', correo: 'miguel@example.com', rol: 'entrenado' },
+                { user: 'claudia.ortiz', usernameGlifing: 'cortiz', nombre: 'Claudia', apellido: 'Ortiz', correo: 'claudia@example.com', rol: 'administrador' },
+                { user: 'pedro.herrera', usernameGlifing: 'pherrera', nombre: 'Pedro', apellido: 'Herrera', correo: 'pedro@example.com', rol: 'editor' },
+                { user: 'cristina.molina', usernameGlifing: 'cmolina', nombre: 'Cristina', apellido: 'Molina', correo: 'cristina@example.com', rol: 'entrenado' },
+                { user: 'alejandro.navarro', usernameGlifing: 'anavarro', nombre: 'Alejandro', apellido: 'Navarro', correo: 'alejandro@example.com', rol: 'administrador' }
+            ];
+
+            const tablaUsuarios = document.querySelector('#tablaUsuarios tbody');
+            const formulario = document.querySelector('#formulario');
+            const camposEntrenado = document.querySelector('#camposEntrenado');
+            const btnAgregarEntrenamiento = document.querySelector('#btnAgregarEntrenamiento');
+            const detalleUsuario = document.querySelector('#detalleUsuario');
+            const edicionUsuario = document.querySelector('#edicionUsuario');
+
+
+            const mostrarEntrenamientos = (rol) => {
+                camposEntrenado.style.display = rol === 'entrenado' ? 'block' : 'none';
+            };
+
+            document.querySelector('#rol').addEventListener('change', (e) => {
+                mostrarEntrenamientos(e.target.value);
+            });
+
+            btnAgregarEntrenamiento.addEventListener('click', () => {
+                const nuevoEntrenamiento = document.createElement('div');
+                nuevoEntrenamiento.classList.add('entrenamiento');
+                nuevoEntrenamiento.innerHTML = `
+                    <input type="text" class="cursoId" placeholder="ID del Curso">
+                    <input type="date" class="fechaEntrenamiento" placeholder="Fecha de Entrenamiento">
+                    <button type="button" class="btnEliminarEntrenamiento btn btn-danger btn-sm">Eliminar</button>
+                `;
+                camposEntrenado.querySelector('#entrenamientos').appendChild(nuevoEntrenamiento);
+            });
+
+            formulario.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const usuario = {
+                    user: formulario.user.value,
+                    usernameGlifing: formulario.usernameGlifing.value || '',
+                    nombre: formulario.nombre.value,
+                    apellido: formulario.apellido.value,
+                    correo: formulario.correo.value,
+                    password: formulario.password.value,
+                    avatar: formulario.avatar.files[0] ? URL.createObjectURL(formulario.avatar.files[0]) : '',
+                    rol: formulario.rol.value,
+                    entrenamientos: []
+                };
+
+                if (usuario.rol === 'entrenado') {
+                    const entrenamientos = camposEntrenado.querySelectorAll('.entrenamiento');
+                    entrenamientos.forEach(entrenamiento => {
+                        const cursoId = entrenamiento.querySelector('.cursoId').value;
+                        const fechaEntrenamiento = entrenamiento.querySelector('.fechaEntrenamiento').value;
+                        if (cursoId && fechaEntrenamiento) {
+                            usuario.entrenamientos.push({
+                                cursoId,
+                                fechaEntrenamiento
+                            });
+                        }
+                    });
+                }
+
+                agregarUsuarioATabla(usuario);
+                formulario.reset();
+                mostrarEntrenamientos('');
+            });
+
+            const agregarUsuarioATabla = (usuario) => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td><input type="checkbox" class="seleccion"></td>
+                    <td>${usuario.user}</td>
+                    <td>${usuario.usernameGlifing}</td>
+                    <td>${usuario.nombre}</td>
+                    <td>${usuario.apellido}</td>
+                    <td>${usuario.correo}</td>
+                    <td><img src="${usuario.avatar}" alt="Avatar" width="50"></td>
+                    <td>${usuario.rol}</td>
+                    <td>
+                        <button class="btnMostrar btn btn-info btn-sm">Mostrar</button>
+                        <button class="btnEditar btn btn-warning btn-sm">Editar</button>
+                        <button class="btnEliminar btn btn-danger btn-sm">Eliminar</button>
+                    </td>
+                `;
+
+                fila.querySelector('.btnMostrar').addEventListener('click', () => mostrarUsuario(usuario));
+                fila.querySelector('.btnEditar').addEventListener('click', () => editarUsuario(usuario, fila));
+                fila.querySelector('.btnEliminar').addEventListener('click', () => eliminarUsuario(fila));
+                // tablaUsuarios.appendChild(fila);
+
+                // Añadir la fila a la tabla
+                document.querySelector('#tablaUsuarios tbody').appendChild(fila);
+            };
+            // usuarios.forEach(agregarUsuarioATabla);
+            // const dataTable = new simpleDatatables.DataTable("#tablaUsuarios");
+
+            // Función para eliminar las filas seleccionadas
+            document.getElementById('btnEliminarSeleccionados').addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('input.seleccion:checked');
+                if (checkboxes.length === 0) {
+                    alert('No se han seleccionado usuarios para eliminar.');
+                    return;
+                }
+
+                let nombresEliminados = [];
+                checkboxes.forEach(function (checkbox) {
+                    const fila = checkbox.closest('tr');
+                    const nombre = fila.querySelector('td:nth-child(4)').textContent; // Suponiendo que la cuarta columna tenga el nombre del usuario
+                    nombresEliminados.push(nombre);
+                    fila.remove();
+                });
+
+                // Mostrar mensaje de alerta con los nombres de los usuarios eliminados
+                alert(`Se han eliminado los siguientes usuarios:\n${nombresEliminados.join('\n')}`);
+            });
+
+            // Función para inicializar la tabla con la columna de selección
+            const inicializarTabla = () => {
+                const header = document.querySelector('#tablaUsuarios thead tr');
+                const headerCell = document.createElement('th');
+                header.insertBefore(headerCell, header.firstChild);
+
+                const rows = document.querySelectorAll('#tablaUsuarios tbody tr');
+                rows.forEach(function (row) {
+                    const cell = document.createElement('td');
+                    cell.innerHTML = '<input type="checkbox" class="seleccion">';
+                    row.insertBefore(cell, row.firstChild);
+                });
+            };
+
+                inicializarTabla();
+                usuarios.forEach(agregarUsuarioATabla);
+            
+       
+            tablaUsuarios.addEventListener('click', (event) => {
+                const fila = event.target.closest('tr');
+                if (!fila) return; // Salir si el click no es en una fila
+
+                const btnMostrar = event.target.closest('.btnMostrar');
+                const btnEditar = event.target.closest('.btnEditar');
+                const btnEliminar = event.target.closest('.btnEliminar');
+
+                if (btnMostrar) {
+                    const usuario = usuarios.find(u => u.user === fila.children[1].textContent);
+                    mostrarUsuario(usuario);
+                } else if (btnEditar) {
+                    const usuario = usuarios.find(u => u.user === fila.children[1].textContent);
+                    editarUsuario(usuario, fila);
+                // } else if (btnEliminar) {
+                //     // Lógica para eliminar el usuario
+                //     eliminarUsuario(fila);
+                }
+            });
+
+
+            const mostrarUsuario = (usuario) => {
+                const columna1 = detalleUsuario.querySelector('#columna1');
+                const columna2 = detalleUsuario.querySelector('#columna2');
+                columna1.innerHTML = `
+                    <p><strong>Nombre de Usuario:</strong> ${usuario.user}</p>
+                    <p><strong>Usuario Glifing:</strong> ${usuario.usernameGlifing}</p>
+                    <p><strong>Nombre:</strong> ${usuario.nombre}</p>
+                    <p><strong>Apellidos:</strong> ${usuario.apellido}</p>
+                    <p><strong>Correo Electrónico:</strong> ${usuario.correo}</p>
+                `;
+                columna2.innerHTML = `
+                    <p><strong>Avatar:</strong> <img src="${usuario.avatar}" alt="Avatar" width="100"></p>
+                    <p><strong>Rol:</strong> ${usuario.rol}</p>
+                `;
+                if (usuario.rol === 'entrenado') {
+                    const entrenamientosHtml = usuario.entrenamientos.map(ent => `
+                        <p><strong>ID del Curso:</strong> ${ent.cursoId}</p>
+                        <p><strong>Fecha de Entrenamiento:</strong> ${ent.fechaEntrenamiento}</p>
+                    `).join('');
+                    columna2.innerHTML += entrenamientosHtml;
+                }
+                detalleUsuario.style.display = 'block';
+                edicionUsuario.style.display = 'none';
+
+                document.querySelector('#btnSalirEdicion').onclick = () => {
+                    detalleUsuario.style.display = 'none';
+                    edicionUsuario.style.display = 'none';
+                };
+            };
+
+            const editarUsuario = (usuario, fila) => {
+                const columna1Edicion = edicionUsuario.querySelector('#columna1Edicion');
+                const columna2Edicion = edicionUsuario.querySelector('#columna2Edicion');
+                columna1Edicion.innerHTML = `
+                    <p><strong>Nombre de Usuario:</strong> <input type="text" value="${usuario.user}" disabled></p>
+                    <p><strong>Usuario Glifing:</strong> <input type="text" id="usernameGlifingInput" value="${usuario.usernameGlifing}"></p>
+                    <p><strong>Nombre:</strong> <input type="text" id="nombreInput" value="${usuario.nombre}"></p>
+                    <p><strong>Apellidos:</strong> <input type="text" id="apellidoInput" value="${usuario.apellido}"></p>
+                    <p><strong>Correo Electrónico:</strong> <input type="email" id="correoInput" value="${usuario.correo}"></p>
+                `;
+                columna2Edicion.innerHTML = `
+                    <p><strong>Avatar:</strong> <input type="file" id="avatarInput"></p>
+                    <p><strong>Rol:</strong>
+                        <select id="rolSelect">
+                            <option value="administrador" ${usuario.rol === 'administrador' ? 'selected' : ''}>Administrador</option>
+                            <option value="entrenador" ${usuario.rol === 'entrenador' ? 'selected' : ''}>Entrenador</option>
+                            <option value="entrenado" ${usuario.rol === 'entrenado' ? 'selected' : ''}>Entrenado</option>
+                        </select>
+                    </p>
+                    <div id="entrenamientosEdicionContainer"></div>
+                `;
+
+                if (usuario.rol === 'entrenado') {
+                    agregarEntrenamientos(usuario.entrenamientos);
+                    alert('Usuario modificado correctamente');
+
+                }
+
+                detalleUsuario.style.display = 'none';
+                edicionUsuario.style.display = 'block';
+
+                document.querySelector('#rolSelect').addEventListener('change', (e) => {
+                    if (e.target.value === 'entrenado') {
+                        agregarEntrenamientos(usuario.entrenamientos);
+                    } else {
+                        document.getElementById('entrenamientosEdicionContainer').innerHTML = '';
+                    }
+                });
+
+                document.querySelector('#btnGuardarEdicion').onclick = () => {
+                    // Actualizar los datos del usuario con los valores del formulario
+                    usuario.usernameGlifing = document.getElementById('usernameGlifingInput').value;
+                    usuario.nombre = document.getElementById('nombreInput').value;
+                    usuario.apellido = document.getElementById('apellidoInput').value;
+                    usuario.correo = document.getElementById('correoInput').value;
+                    usuario.rol = document.getElementById('rolSelect').value;
+
+                    // Actualizar entrenamientos si el rol es "entrenado"
+                    if (usuario.rol === 'entrenado') {
+                        usuario.entrenamientos = [];
+                        const entrenamientos = document.querySelectorAll('#entrenamientosEdicion .entrenamiento');
+                        entrenamientos.forEach(entrenamiento => {
+                            const cursoId = entrenamiento.querySelector('.cursoId').value;
+                            const fechaEntrenamiento = entrenamiento.querySelector('.fechaEntrenamiento').value;
+                            if (cursoId && fechaEntrenamiento) {
+                                usuario.entrenamientos.push({
+                                    cursoId,
+                                    fechaEntrenamiento
+                                });
+                            }
+                        });
+                    }
+
+                    actualizarFilaUsuario(fila, usuario);
+
+                    document.getElementById('edicionUsuario').style.display = 'none';
+                    alert('Usuario modificado correctamente');
+                };
+
+                document.querySelector('#btnCancelarEdicion').onclick = () => {
+                    detalleUsuario.style.display = 'none';
+                    edicionUsuario.style.display = 'none';
+                };
+            };
+
+            const agregarEntrenamientos = (entrenamientos) => {
+                const entrenamientosEdicionContainer = document.getElementById('entrenamientosEdicionContainer');
+                const entrenamientosHtml = entrenamientos.map(ent => `
+                    <div class="entrenamiento">
+                        <input type="text" class="cursoId" value="${ent.cursoId}">
+                        <input type="date" class="fechaEntrenamiento" value="${ent.fechaEntrenamiento}">
+                        <button type="button" class="btnEliminarEntrenamiento btn btn-danger btn-sm">Eliminar</button>
+                    </div>
+                `).join('');
+                entrenamientosEdicionContainer.innerHTML = `
+                    <div id="entrenamientosEdicion">${entrenamientosHtml}</div>
+                    <button type="button" id="btnAgregarEntrenamientoEdicion" class="btn btn-success btn-sm">Agregar entrenamiento</button>
+                `;
+
+                document.querySelector('#btnAgregarEntrenamientoEdicion').addEventListener('click', () => {
+                    const entrenamientoDiv = document.createElement('div');
+                    entrenamientoDiv.className = 'entrenamiento';
+                    entrenamientoDiv.innerHTML = `
+                        <input type="text" class="cursoId">
+                        <input type="date" class="fechaEntrenamiento">
+                        <button type="button" class="btnEliminarEntrenamiento btn btn-danger btn-sm">Eliminar</button>
+                    `;
+                    document.getElementById('entrenamientosEdicion').appendChild(entrenamientoDiv);
+
+                    entrenamientoDiv.querySelector('.btnEliminarEntrenamiento').addEventListener('click', (e) => {
+                        e.target.parentElement.remove();
+                    });
+                });
+
+                document.querySelectorAll('.btnEliminarEntrenamiento').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.target.parentElement.remove();
+                    });
+                });
+            };
+
+         
+
+            const actualizarFilaUsuario = (fila, usuario) => {
+                fila.cells[2].textContent = usuario.usernameGlifing;
+                fila.cells[3].textContent = usuario.nombre;
+                fila.cells[4].textContent = usuario.apellido;
+                fila.cells[5].textContent = usuario.correo;
+                fila.cells[6].querySelector('img').src = usuario.avatar;
+                fila.cells[7].textContent = usuario.rol;
+
+            };
+
+            const eliminarUsuario = (fila) => {
+                if (confirm('¿Estás seguro de eliminar este usuario?')) {
+                    fila.remove();
+                    alert('Usuario eliminado correctamente');
+                } else {
+                    alert('Eliminación cancelada');
+                }
+            };
+
+        });
+    </script>
+</body>
+</html>

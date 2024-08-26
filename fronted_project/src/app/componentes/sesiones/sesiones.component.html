@@ -1,0 +1,156 @@
+<div class="sb-nav-fixed">
+    <app-nav></app-nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_content">
+
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Gestión de Sesiones</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Inicio</li>
+                    </ol>
+
+                    
+
+                    <!-- Formulario de creación de sesión -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-plus-circle me-1"></i>
+                            Crear Nueva Sesión
+                        </div>
+                        <div class="card-body">
+                            <form id="sessionForm" (ngSubmit)="onSubmit()" #sessionForm="ngForm">
+                                <h3>Crear Nueva Sesión</h3>
+                                <div class="mb-3">
+                                    <label for="sessionName" class="form-label">Nombre de la Sesión</label>
+                                    <input type="text" class="form-control" id="sessionName" name="sessionName" [(ngModel)]="sessionName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionId" class="form-label">ID de la Sesión:</label>
+                                    <input class="form-control" id="sessionId" [(ngModel)]="sessionId" name="sessionId" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionDescription" class="form-label">Descripción de la Sesión</label>
+                                    <textarea class="form-control" id="sessionDescription" name="sessionDescription" [(ngModel)]="sessionDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionStatus" class="form-label">Estado de la Sesión</label>
+                                    <select class="form-select" id="sessionStatus" name="sessionStatus" [(ngModel)]="sessionStatus" required>
+                                        <option value="activo">Activa</option>
+                                        <option value="en_pruebas">En prueba</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionActivities" class="form-label">Selecciona las Actividades</label>
+                                    <select class="form-select" id="sessionActivities" name="sessionActivities" [(ngModel)]="selectedActivities" multiple>
+                                        <option *ngFor="let activity of activities" [value]="activity.id">{{ activity.name }}</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Crear Sesión</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-list me-1"></i>
+                            Sesiones Existentes
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                        
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr class="row">
+                                                  <th class="col-sm-1">Seleccionar</th>
+                                                  <th class="col-sm-1">Nombre</th>
+                                                  <th class="col-sm-1">Descripción</th>
+                                                  <th class="col-sm-1">ID Creador</th>
+                                                  <th class="col-sm-2">Fecha Creación</th>
+                                                  <th class="col-sm-1">ID Modificado</th>
+                                                  <th class="col-sm-2">Fecha Modificado</th>
+                                                  <th class="col-sm-1">Estado</th>
+                                                  <th class="col-sm-2">Actividades</th>
+
+                                                </tr>
+                          
+                                              </thead>
+                                              <tbody>
+                                                <tr *ngFor="let session of sessions" class="row">
+                                                  <td class="col-sm-1">
+                                                    <input type="checkbox" [value]="session.id" (change)="onCheckboxChange($event, session.id)">
+                                                  </td>
+                                                  <td class="col-sm-1"><i>{{ session.name }}</i></td>
+                                                  <td class="col-sm-1"><i>{{ session.description }}</i></td>
+                                                  <td class="col-sm-1"><i>{{ session.created_user || 'No disponible' }}</i></td>
+                                                  <td class="col-sm-2"><i>{{ session.created_datetime  | date:'dd/MM/yyyy HH:mm' }}</i></td>
+                                                  <td class="col-sm-1"><i>{{ session.modified_user || 'No disponible' }}</i></td>
+                                                  <td class="col-sm-2"><i>{{ session.modified_datetime  | date:'dd/MM/yyyy HH:mm' }}</i></td>
+                                                  <td class="col-sm-1"><i>{{ session.status }}</i></td>
+                                                  <td class="col-sm-1">
+                                                    <fieldset class="form-group col-sm-1">
+                                                        <button class="btn btn-info" (click)="openEditModal(session)">Editar</button>                                                    </fieldset>
+                                                  </td>
+                                                  <td class="col-sm-1">
+                                                    <fieldset class="form-group col-sm-1">
+                                                      <a class="btn btn-danger" (click)="deleteSession(session.id)">Borrar</a>
+                                                    </fieldset>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                        </table>
+                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                        
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar sesión -->
+<div class="modal fade" id="editSessionModal" tabindex="-1" aria-labelledby="editSessionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSessionModalLabel">Editar Sesión</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="onEditSubmit()">
+                    <div class="mb-3">
+                        <label for="editSessionName" class="form-label">Nombre de la Sesión</label>
+                        <input type="text" class="form-control" id="editSessionName" name="editSessionName" [(ngModel)]="editSession.name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSessionId" class="form-label">ID de la Sesión:</label>
+                        <input class="form-control" id="editSessionId" [(ngModel)]="editSession.session_id" name="editSessionId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSessionDescription" class="form-label">Descripción de la Sesión</label>
+                        <textarea class="form-control" id="editSessionDescription" name="editSessionDescription" [(ngModel)]="editSession.description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSessionStatus" class="form-label">Estado de la Sesión</label>
+                        <select class="form-select" id="editSessionStatus" name="editSessionStatus" [(ngModel)]="editSession.status" required>
+                            <option value="activo">Activa</option>
+                            <option value="en_pruebas">En prueba</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSessionActivities" class="form-label">Selecciona las Actividades</label>
+                        <select class="form-select" id="editSessionActivities" name="editSessionActivities" [(ngModel)]="selectedActivities" multiple required>
+                            <option *ngFor="let activity of activities" [value]="activity.id" [selected]="editSession.activities?.includes(activity.id)">{{ activity.name }}</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+  

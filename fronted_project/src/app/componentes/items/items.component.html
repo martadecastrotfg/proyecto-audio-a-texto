@@ -1,0 +1,111 @@
+<div class="sb-nav-fixed">
+    <app-nav></app-nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_content">
+
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Gestión de Items</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Inicio</li>
+                </ol>
+
+                <!-- Selector de tipo de actividad -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-filter me-1"></i>
+                        Selección de Tipo de Actividad
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="activityTypeSelect" class="form-label">Tipo de Actividad</label>
+                            <select class="form-select" id="activityTypeSelect" (change)="onActivityTypeChange($event)">
+                                <option value="">Seleccione Tipo</option>
+                                <option value="texto_completo">Texto Completo</option>
+                                <option value="palabras_sueltas">Palabras Sueltas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de creación de item -->
+                <div class="card mb-4" *ngIf="activityType">
+                    <div class="card-header">
+                        <i class="fas fa-plus-circle me-1"></i>
+                        Crear Nuevo Item
+                    </div>
+                    <div class="card-body">
+                        <form id="itemForm" (ngSubmit)="onItemSubmit()" #itemForm="ngForm">
+                            <div class="mb-3">
+                                <label for="activitySelect" class="form-label">Seleccionar Actividad</label>
+                                <select class="form-select" id="activitySelect" [(ngModel)]="selectedActivityId" name="selectedActivityId" required>
+                                    <option *ngFor="let activity of filteredActivities" [value]="activity.id">{{ activity.name }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="orderInActivity" class="form-label">Orden en la Actividad</label>
+                                <input type="number" class="form-control" id="orderInActivity" name="orderInActivity" [(ngModel)]="orderInActivity" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="itemValue" class="form-label">Valor del Item</label>
+                                <textarea class="form-control" id="itemValue" name="itemValue" [(ngModel)]="itemValue" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Crear Item</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tabla de Items -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-list me-1"></i>
+                        Items Existentes
+                    </div>
+                    <div class="card-body">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="row">
+                                            <th class="col-sm-2">Seleccionar</th>
+                                            <th class="col-sm-3">Actividad</th>
+                                            <th class="col-sm-2">Orden</th>
+                                            <th class="col-sm-3">Valor</th>
+                                            <th class="col-sm-2">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of items" class="row">
+                                          <td class="col-sm-2">
+                                            <input type="checkbox" [value]="item.id">
+                                          </td>
+                                          <td class="col-sm-3">{{ activityNames[item.activity] || 'Desconocida' }}</td> <!-- Usar activityNames[item.activity] -->
+                                          <td class="col-sm-2">{{ item.order_in_activity }}</td>
+                                          <td class="col-sm-3">{{ item.value }}</td>
+                                          <td class="col-sm-1">
+                                            <fieldset class="form-group col-sm-1">
+                                              <button class="btn btn-info">Editar</button>
+                                            </fieldset>
+                                          </td>
+                                          <td class="col-sm-1">
+                                            <fieldset class="form-group col-sm-1">
+                                              <a class="btn btn-danger">Borrar</a>
+                                            </fieldset>
+                                          </td>
+                                        </tr>
+                                    </tbody>
+                                      
+                                      
+                                </table>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

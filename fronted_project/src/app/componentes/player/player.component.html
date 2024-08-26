@@ -1,0 +1,96 @@
+<div class="sb-nav-fixed">
+  <app-nav></app-nav>
+  <div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+      <div class="container mt-4">
+        <div *ngIf="currentActivity">
+          <h2 class="mb-3">{{ currentActivity.name }}</h2>
+          <p class="lead">{{ currentActivity.instruction }}</p>
+
+          <!-- Información de la actividad actual -->
+          <div class="mb-3">
+            <p>Actividad {{ activityIndex + 1 }} de {{ totalActivities }}</p>
+            <p>Tipo: {{ currentActivity.type === 'texto_completo' ? 'Texto Completo' : 'Palabras Sueltas' }}</p>
+            <p>Número de Items: {{ currentActivity.items.length }}</p>
+            <p>ID de la Sesión de Entrenamiento: {{ sessionId }}</p>
+            <p>Actividad Completada: {{ currentActivity.completed ? 'Sí' : 'No' }}</p>
+          </div>
+
+          <!-- Mostrar texto completo o palabras sueltas -->
+          <div *ngIf="currentActivity.type === 'texto_completo'">
+            <div [innerHTML]="currentActivity.description" class="text-content"></div>
+          </div>
+
+          <div *ngIf="currentActivity.type === 'palabras_sueltas'">
+            <!-- Mostrando un solo item en el centro -->
+            <div class="d-flex justify-content-center align-items-center my-4">
+              <h3>{{ currentActivity.items[currentItemIndex].value }}</h3>
+            </div>
+
+            <!-- Controles de navegación entre items -->
+            <div class="d-flex justify-content-between mt-3">
+              <button 
+                class="btn btn-secondary" 
+                (click)="goToPreviousItem()" 
+                [disabled]="currentItemIndex === 0">
+                Item Anterior
+              </button>
+              <button 
+                class="btn btn-secondary" 
+                (click)="goToNextItem()" 
+                [disabled]="currentItemIndex === currentActivity.items.length - 1">
+                Siguiente Item
+              </button>
+            </div>
+          </div>
+
+          <!-- Controles de grabación -->
+          <div class="d-flex justify-content-center my-4">
+            <button 
+              class="btn btn-lg" 
+              [ngClass]="{'btn-danger': isRecording, 'btn-success': !isRecording}"
+              (click)="toggleRecording()">
+              <i class="fas" [ngClass]="{'fa-microphone-slash': isRecording, 'fa-microphone': !isRecording}"></i>
+              {{ isRecording ? 'Stop Recording' : 'Start Recording' }}
+            </button>
+          </div>
+
+          <!-- Reproductor de audio -->
+          <audio #audio controls class="w-100 mt-3"></audio>
+
+          <!-- Botones de subir y volver a grabar -->
+          <div class="d-flex justify-content-between mt-3">
+            <button 
+              class="btn btn-primary" 
+              (click)="uploadAudio()">
+              Subir
+            </button>
+            <button 
+              class="btn btn-secondary" 
+              (click)="discardRecording()">
+              Volver a Grabar
+            </button>
+          </div>
+
+          <!-- Controles de navegación entre actividades -->
+          <div class="d-flex justify-content-between mt-3">
+            <button 
+              class="btn btn-secondary" 
+              (click)="goToPreviousActivity()" 
+              [disabled]="activityIndex === 0">
+              Anterior Actividad
+            </button>
+            <button 
+              class="btn btn-secondary" 
+              (click)="goToNextActivity()" 
+              [disabled]="activityIndex === totalActivities - 1">
+              Siguiente Actividad
+            </button>
+          </div>
+
+          <button (click)="goBack()" class="btn btn-secondary mt-3">Volver</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

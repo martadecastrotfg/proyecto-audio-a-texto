@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Plataforma de gestión de usuarios y actividades" />
+    <meta name="author" content="Equipo de Desarrollo" />
+    <title>Gestión de Sesiones</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+</head>
+<body class="sb-nav-fixed">
+    <!-- Barra de navegación -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="index.html">Inicio</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Buscar..." aria-label="Buscar..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!">Ajustes</a></li>
+                    <li><a class="dropdown-item" href="#!">Actividad de la cuenta</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="#!">Salir</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+     <!-- Sidebar -->
+     <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Principal</div>
+                        <a class="nav-link" href="index.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Inicio
+                        </a>
+                        <a class="nav-link" href="sesiones.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calendar-alt"></i></div>
+                            Sesiones
+                        </a>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Bienvenido, Admin</div>
+                    Gestión de Usuarios
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Gestión de Sesiones</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Inicio</li>
+                    </ol>
+
+                    <!-- Formulario de creación de sesión -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-plus-circle me-1"></i>
+                            Crear Nueva Sesión
+                        </div>
+                        <div class="card-body">
+                            <form id="sessionForm">
+                                <h3>Crear Nueva Sesión</h3>
+                                <div class="mb-3">
+                                    <label for="sessionName" class="form-label">Nombre de la Sesión</label>
+                                    <input type="text" class="form-control" id="sessionName" name="sessionName" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionDescription" class="form-label">Descripción de la Sesión</label>
+                                    <textarea class="form-control" id="sessionDescription" name="sessionDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sessionStatus" class="form-label">Estado de la Sesión</label>
+                                    <select class="form-select" id="sessionStatus" name="sessionStatus" required>
+                                        <option value="Activa">Activa</option>
+                                        <option value="En prueba">En prueba</option>
+                                        <option value="Inactiva">Inactiva</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="createdUser" class="form-label">ID del Usuario Creador</label>
+                                    <input type="text" class="form-control" id="createdUser" name="createdUser" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="modifiedUser" class="form-label">ID del Usuario Modificador</label>
+                                    <input type="text" class="form-control" id="modifiedUser" name="modifiedUser" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="createdDateTime" class="form-label">Fecha y Hora de Creación</label>
+                                    <input type="datetime-local" class="form-control" id="createdDateTime" name="createdDateTime" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="modifiedDateTime" class="form-label">Fecha y Hora de Modificación</label>
+                                    <input type="datetime-local" class="form-control" id="modifiedDateTime" name="modifiedDateTime" required>
+                                </div>
+                                <h5>Actividad 1</h5>
+                                <div id="activities">
+                                    <div class="activity mb-3 row">
+                                        <div class="col-md-6">
+                                            <label for="activityName" class="form-label">Nombre de la Actividad</label>
+                                            <input type="text" class="form-control" name="activityName" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="activityDescription" class="form-label">Descripción de la Actividad (corta)</label>
+                                            <textarea class="form-control" name="activityDescription" required></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="activityInstruction" class="form-label">Instrucciones</label>
+                                            <textarea class="form-control" name="activityInstruction" rows="2" required></textarea>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="activityOrder" class="form-label">Orden en la Sesión</label>
+                                            <input type="number" class="form-control" name="activityOrder" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="task_id" class="form-label">ID de la Tarea</label>
+                                            <input type="text" class="form-control" name="task_id" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-secondary mb-3" id="addActivity">Añadir Actividad</button>
+                                <button type="submit" class="btn btn-primary">Crear Sesión</button>
+                            </form>
+                            
+                            
+
+                            <!-- Plantilla de actividad (oculta) -->
+                            <div id="activityTemplate" style="display: none;">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre de la Actividad</label>
+                                    <input type="text" class="form-control activity-name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Descripción de la Actividad</label>
+                                    <textarea class="form-control activity-description" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Elementos de la Actividad</label>
+                                    <input type="file" class="form-control activity-items" multiple>
+                                    <div id="fileList"></div>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-list me-1"></i>
+                            Sesiones Existentes
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Tabla para sesiones activas -->
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header d-flex align-items-center justify-content-center">
+                                            <h5 class="mb-0">Activas</h5>
+                                        </div>
+                                        <table class="session-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th> <!-- Espacio para checkbox -->
+                                                    <th>Sesión</th>
+                                                    <th>Descripción</th>
+                                                    <th>Creador</th>
+                                                    <th>Fecha Creación</th>
+                                                    <th>ID Creador</th>
+                                                    <th>ID Modificado</th>
+                                                    <th>Fecha Modificado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="activeSessionList">
+                                                <!-- Aquí se agregarán dinámicamente las sesiones activas -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> <!-- Fin de la fila para sesiones activas -->
+                    
+                            <div class="row">
+                                <!-- Tabla para sesiones en prueba -->
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header d-flex align-items-center justify-content-center">
+                                            <h5 class="mb-0">En Prueba</h5>
+                                        </div>
+                                        <table class="session-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th> <!-- Espacio para checkbox -->
+                                                    <th>Sesión</th>
+                                                    <th>Descripción</th>
+                                                    <th>Creador</th>
+                                                    <th>Fecha Creación</th>
+                                                    <th>ID Creador</th>
+                                                    <th>ID Modificado</th>
+                                                    <th>Fecha Modificado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="testingSessionList">
+                                                <!-- Aquí se agregarán dinámicamente las sesiones en prueba -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> <!-- Fin de la fila para sesiones en prueba -->
+                    
+                            <div class="row">
+                                <!-- Tabla para sesiones inactivas -->
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-header d-flex align-items-center justify-content-center">
+                                            <h5 class="mb-0">Inactivas</h5>
+                                        </div>
+                                        <table class="session-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th> <!-- Espacio para checkbox -->
+                                                    <th>Sesión</th>
+                                                    <th>Descripción</th>
+                                                    <th>Creador</th>
+                                                    <th>Fecha Creación</th>
+                                                    <th>ID Creador</th>
+                                                    <th>ID Modificado</th>
+                                                    <th>Fecha Modificado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="inactiveSessionList">
+                                                <!-- Aquí se agregarán dinámicamente las sesiones inactivas -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> <!-- Fin de la fila para sesiones inactivas -->
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </main>
+
+            <!-- Pie de página -->
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2024</div>
+                        <div>
+                            <a href="#">Política de Privacidad</a>
+                            &middot;
+                            <a href="#">Términos y Condiciones</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+  <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionForm = document.getElementById('sessionForm');
+            const activeSessionList = document.getElementById('activeSessionList');
+            const testingSessionList = document.getElementById('testingSessionList');
+            const inactiveSessionList = document.getElementById('inactiveSessionList');
+
+            const addActivityButton = document.getElementById('addActivity');
+            const activitiesContainer = document.getElementById('activities');
+            let activityCounter = 1;
+
+            addActivityButton.addEventListener('click', function () {
+                
+                // Validar los campos de la actividad actual antes de añadir una nueva
+                const currentActivityFields = activitiesContainer.querySelectorAll('.activity:last-child input, .activity:last-child textarea');
+                let allFieldsFilled = true;
+                currentActivityFields.forEach(field => {
+                    if (!field.value) {
+                        allFieldsFilled = false;
+                    }
+                });
+
+                if (!allFieldsFilled) {
+                    alert('Por favor, complete todos los campos de la actividad antes de añadir una nueva.');
+                    return;
+                }
+                
+                activityCounter++;
+                const activityDiv = document.createElement('div');
+                activityDiv.classList.add('activity', 'mb-3', 'row');
+                activityDiv.innerHTML = `
+                    <div class="col-12">
+                        <h5>Actividad ${activityCounter}</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="activityName" class="form-label">Nombre de la Actividad</label>
+                        <input type="text" class="form-control" name="activityName" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="activityDescription" class="form-label">Descripción de la Actividad</label>
+                        <textarea class="form-control" name="activityDescription" rows="2" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="activityInstruction" class="form-label">Instrucciones</label>
+                        <textarea class="form-control" name="activityInstruction" rows="2" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="activityOrder" class="form-label">Orden en la Sesión</label>
+                        <input type="number" class="form-control" name="activityOrder" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="task_id" class="form-label">ID de la Tarea</label>
+                        <input type="text" class="form-control" name="task_id" required>
+                    </div>
+                `;
+                activitiesContainer.appendChild(activityDiv);
+            });
+
+
+            function addSessionToTable(session, tableBody) {
+                const row = document.createElement('tr');
+
+                // Columna para el checkbox
+                const checkboxCell = document.createElement('td');
+                checkboxCell.classList.add('checkbox-cell'); // Agregar clase para aplicar estilos
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkboxCell.appendChild(checkbox);
+                row.appendChild(checkboxCell);
+
+                // Columna para el nombre de la sesión
+                const nameCell = document.createElement('td');
+                nameCell.textContent = session.name;
+                row.appendChild(nameCell);
+
+                // Columna para la descripción de la sesión
+                const descriptionCell = document.createElement('td');
+                descriptionCell.textContent = session.description;
+                row.appendChild(descriptionCell);
+
+                // Columna para el creador de la sesión
+                const creatorCell = document.createElement('td');
+                creatorCell.textContent = session.user;
+                row.appendChild(creatorCell);
+
+                // Columna para la fecha y hora de creación
+                const createdCell = document.createElement('td');
+                createdCell.textContent = session.created;
+                row.appendChild(createdCell);
+
+                // Columna para el ID del usuario creador
+                const createdUserCell = document.createElement('td');
+                createdUserCell.textContent = session.createdUser_id;
+                row.appendChild(createdUserCell);
+
+                // Columna para el ID del usuario modificado
+                const modifiedUserCell = document.createElement('td');
+                modifiedUserCell.textContent = session.modifiedUser_id;
+                row.appendChild(modifiedUserCell);
+
+                // Columna para la fecha y hora de modificación
+                const modifiedCell = document.createElement('td');
+                modifiedCell.textContent = session.modified;
+                row.appendChild(modifiedCell);
+
+                // Agregar la fila a la tabla correspondiente
+                tableBody.appendChild(row);
+            }
+
+            // Ejemplo de sesiones base
+            const sesionesBase = [
+                { name: 'Base 1', description: 'Descripción de la Sesión Base 1', status: 'Activa', user: 'admin', createdUser_id: 'admin', modifiedUser_id: 'admin', created: '2024-07-18T09:30', modified: '2024-07-18T10:15' },
+                { name: 'Base 2', description: 'Descripción de la Sesión Base 2', status: 'En prueba', user: 'admin', createdUser_id: 'admin', modifiedUser_id: 'admin', created: '2024-07-18T10:45', modified: '2024-07-18T11:30' },
+                { name: 'Base 3', description: 'Descripción de la Sesión Base 3', status: 'Inactiva', user: 'admin', createdUser_id: 'admin', modifiedUser_id: 'admin', created: '2024-07-18T12:00', modified: '2024-07-18T12:45' }
+            ];
+
+            // Mostrar sesiones base al cargar la página
+            sesionesBase.forEach(session => {
+                switch (session.status) {
+                    case 'Activa':
+                        addSessionToTable(session, activeSessionList);
+                        break;
+                    case 'En prueba':
+                        addSessionToTable(session, testingSessionList);
+                        break;
+                    case 'Inactiva':
+                        addSessionToTable(session, inactiveSessionList);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            
+
+            function showFirstActivityOnly() {
+                const allActivities = document.querySelectorAll('.activity');
+                const activityCounter = allActivities.length;
+
+                if (activityCounter > 1) {
+                    allActivities.forEach((activity, index) => {
+                        // Ocultar todas las actividades por defecto
+                        if (index !== 0) {
+                            activity.remove(); // Remover las actividades adicionales del DOM
+                        } else {
+                            activity.classList.remove('hide');
+                            activity.classList.add('show');
+                        }
+                    });
+                }
+            }
+
+
+
+
+            sessionForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                // Mostrar solo la primera actividad al enviar el formulario
+                showFirstActivityOnly();
+
+                const formData = new FormData(sessionForm);
+                const sessionData = {
+                    name: formData.get('sessionName'),
+                    description: formData.get('sessionDescription'),
+                    status: formData.get('sessionStatus'),
+                    createdUser_id: formData.get('createdUser'),
+                    modifiedUser_id: formData.get('modifiedUser'),
+                    created: formData.get('created'),
+                    modified: formData.get('modified')
+                };
+
+                // Simular la respuesta del servidor al crear la sesión
+                const newSession = {
+                    name: sessionData.name,
+                    description: sessionData.description,
+                    status: sessionData.status,
+                    user: sessionData.createdUser_id,
+                    created: sessionData.created,
+                    modifiedUser_id: sessionData.modifiedUser_id,
+                    modified: sessionData.modified
+                };
+
+                // Agregar la nueva sesión a la tabla correspondiente
+                switch (newSession.status) {
+                    case 'Activa':
+                        addSessionToTable(newSession, activeSessionList);
+                        break;
+                    case 'En prueba':
+                        addSessionToTable(newSession, testingSessionList);
+                        break;
+                    case 'Inactiva':
+                        addSessionToTable(newSession, inactiveSessionList);
+                        break;
+                    default:
+                        break;
+                }
+
+                // Limpiar el formulario después de agregar la sesión
+                sessionForm.reset();
+            });
+
+            const inputFile = document.querySelector('.activity-items');
+            const fileList = document.getElementById('fileList');
+
+            inputFile.addEventListener('change', function() {
+                fileList.innerHTML = ''; // Limpiar la lista de archivos
+
+                const files = inputFile.files;
+                for (let i = 0; i < files.length; i++) {
+                    const fileItem = document.createElement('div');
+                    fileItem.textContent = `${files[i].name} (${bytesToSize(files[i].size)})`;
+                    fileList.appendChild(fileItem);
+                }
+            });
+            showFirstActivityOnly();
+
+        });
+
+  </script>
+</body>
+</html>

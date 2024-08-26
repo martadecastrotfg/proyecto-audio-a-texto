@@ -1,0 +1,128 @@
+<div class="sb-nav-fixed">
+  <app-nav></app-nav>
+
+  <div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          <h1 class="mt-4">Mis Sesiones</h1>
+
+          <!-- Información del usuario y cursos -->
+          <div class="mb-4">
+            <h3>Usuario: {{ user?.first_name || 'Cargando...' }}</h3>
+            <p><strong>Cursos:</strong></p>
+            <ul>
+              <li *ngFor="let curso of cursos">
+                <div>
+                  <strong>{{ curso.name }}</strong>
+                  <!-- Muestra sesiones asociadas a este curso -->
+                  <ul>
+                    <li *ngFor="let session of curso.sessions">
+                      Sesión ID: {{ session.id }} - Fecha: {{ session.created_datetime | date:'dd/MM/yyyy HH:mm' }}
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Botones de filtrado con separación -->
+          <div class="btn-group mb-3" role="group" aria-label="Filtrar sesiones">
+            <button
+              class="btn btn-primary me-2"
+              [ngClass]="{'active': !filterResults}"
+              (click)="filterResults = false">
+              Sesiones SIN FINALIZAR
+            </button>
+            <button
+              class="btn btn-secondary"
+              [ngClass]="{'active': filterResults}"
+              (click)="filterResults = true">
+              Sesiones FINALIZADAS
+            </button>
+          </div>
+
+          <!-- Tabla de sesiones (completadas o sin finalizar) -->
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-calendar-alt me-1"></i>
+              Lista de Sesiones
+            </div>
+            <div class="card-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th *ngIf="filterResults">Resultados</th>
+                    <th>Actividades</th>
+                    <th>Progreso</th>
+                    <th>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let session of (filterResults ? completedSessions : incompleteSessions)">
+                    <td>{{ session.id }}</td>
+                    <td>{{ session.created_datetime | date:'dd/MM/yyyy HH:mm' }}</td>
+                    <td *ngIf="filterResults">
+                      resultados
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-primary btn-lg"
+                        (click)="openActivitiesModal(session.activities ? session.activities : [])">
+                        Ver Actividades
+                      </button>
+                    </td>
+                    <td>
+                      <span>{{ session.completed_activities }}/{{ session.total_activities }}</span>
+                    </td>
+                    <td>
+                      <button
+                        class="btn btn-primary btn-lg"
+                        (click)="startSession(session.id)">
+                        Comenzar
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Modal para mostrar actividades -->
+          <div class="modal fade" id="activitiesModal" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="activitiesModalLabel">Actividades</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div *ngFor="let activity of selectedActivities">
+                    <h3>{{ activity.name }}</h3>
+                    <p>{{ activity.instruction }}</p>
+
+                    <div *ngIf="activity.type === 'texto_completo'">
+                      <div [innerHTML]="activity.description"></div>
+                    </div>
+
+                    <div *ngIf="activity.type === 'palabras_sueltas'">
+                      <ul>
+                        <li *ngFor="let item of activity.items">{{ item.value }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

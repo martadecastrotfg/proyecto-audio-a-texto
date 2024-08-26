@@ -1,0 +1,91 @@
+<div class="sb-nav-fixed">
+  <app-nav></app-nav>
+
+  <div id="layoutSidenav">
+    <div id="layoutSidenav_content">
+      <main>
+        <div class="container-fluid px-4">
+          <h1 class="mt-4">Gestión de Cursos</h1>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Cursos</li>
+          </ol>
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-table me-1"></i>
+              Tabla de Cursos
+            </div>
+            <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <form class="form-inline">
+                      <fieldset class="form-group col-sm-11"></fieldset>
+                      <fieldset class="form-group col-sm-12 d-flex align-items-center">
+                        <a class="btn btn-primary btn-custom" [routerLink]="['/cursos/agregar']">+</a>
+                        <button id="btnEliminarSeleccionados" type="button" class="btn btn-primary btn-custom ms-2" (click)="eliminarSeleccionados()">Eliminar</button>
+                      </fieldset>
+                    </form>
+                    <br>
+
+                    <!-- Tabla -->
+                    <table id="tablaCursos" class="table table-striped table-hover">
+                      <thead>
+                        <tr class="row">
+                          <th class="col-sm-1">
+                            <input type="checkbox">
+                          </th>
+                          <th class="col-sm-1 text-center">
+                            ID
+                            <span class="sort-icons">
+                              <span (click)="setOrder('id', true)" class="sortable">&#9651;</span> <!-- Flecha ascendente -->
+                              <span (click)="setOrder('id', false)" class="sortable">&#9661;</span> <!-- Flecha descendente -->
+                            </span>
+                          </th>
+                          <th class="col-sm-2 text-center">
+                            Curso
+                            <span class="sort-icons">
+                              <span (click)="setOrder('name', true)" class="sortable">&#9651;</span> <!-- Flecha ascendente -->
+                              <span (click)="setOrder('name', false)" class="sortable">&#9661;</span> <!-- Flecha descendente -->
+                            </span>
+                          </th>
+                          <th class="col-sm-3">Usuarios</th>
+                          <th class="col-sm-3">Sesiones</th>
+                          <th class="col-sm-2">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let curso of cursos | orderBy: order:reverse | paginate: { itemsPerPage: 5, currentPage: p }" class="row">
+                          <td class="col-sm-1"><input type="checkbox" [value]="curso.id" (change)="onCheckboxChange($event, curso.id)"></td>
+                          <td class="col-sm-1">{{ curso.id }}</td>
+                          <td class="col-sm-2">{{ curso.name }}</td>
+                          <td class="col-sm-3">
+                            <ul>
+                              <li *ngFor="let usuario of usuariosPorCurso[curso.id]">{{ usuario.username }}</li>
+                            </ul>
+                          </td>
+                          <td class="col-sm-3">
+                            <ul>
+                              <li *ngFor="let session of curso.sessions">Sesión ID: {{ session.id }}</li>
+                            </ul>
+                          </td>
+                          <td class="col-sm-2">
+                            <a class="btn btn-info" [routerLink]="['/cursos/editar/', curso.id]">Editar</a>
+                            <a class="btn btn-danger ms-2" (click)="borrarCurso(curso.id)">Borrar</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- Controles de Paginación -->
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+{
+  "Autor": "Tu Nombre",
+  "Company": "Tu Empresa",
+  "Name": "Contador de Palabras por Archivo de Audio",
+  "Description": "Esta tarea cuenta el número de palabras en un archivo de audio utilizando reconocimiento de voz.",
+  "Parameters": [
+    {
+      "name": "audio_file",
+      "type": "string",
+      "description": "Ruta al archivo de audio a analizar (debe ser un archivo WAV)."
+    }
+  ],
+  "Response": {
+    "status": {
+      "code": "integer",
+      "msg": "string"
+    },
+    "results": {
+      "word_count": "integer"
+    }
+  }
+}
+

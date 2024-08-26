@@ -1,0 +1,109 @@
+<div class="sb-nav-fixed">
+    <app-nav></app-nav>
+  
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_content">
+        <div class="container-fluid px-4">
+
+        <!-- Mensaje de error si no está autenticado -->
+        <p *ngIf="!userLoginOn" class="alert alert-danger">{{message}}</p>
+  
+        <!-- Mensaje de éxito si está autenticado -->
+        <p *ngIf="userLoginOn" class="alert alert-success">{{message}}</p>
+  
+        <div class="card mb-4">
+            <div class="card-header">
+              Datos Personales
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <!-- Avatar del usuario -->
+                <div class="col-md-3 text-center">
+                  <img [src]="userData?.avatar || 'https://via.placeholder.com/150'" 
+                       class="img-fluid rounded-circle" 
+                       alt="Avatar de {{userData?.username}}" 
+                       style="max-width: 150px; max-height: 150px;">
+                  <h4 class="mt-2">{{userData?.username}}</h4>
+                </div>
+                
+                <!-- Datos del usuario -->
+                <div class="col-md-9">
+                  <!-- Formulario editable -->
+                  <form *ngIf="editMode" (ngSubmit)="updateUserData()" enctype="multipart/form-data">
+                    <div class="mb-3">
+                      <label for="firstName" class="form-label"><strong>Nombre:</strong></label>
+                      <input type="text" id="firstName" [(ngModel)]="editUserData.first_name" name="firstName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                      <label for="lastName" class="form-label"><strong>Apellido:</strong></label>
+                      <input type="text" id="lastName" [(ngModel)]="editUserData.last_name" name="lastName" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                      <label for="email" class="form-label"><strong>Email:</strong></label>
+                      <input type="email" id="email" [(ngModel)]="editUserData.email" name="email" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                      <label for="username" class="form-label"><strong>Username:</strong></label>
+                      <input type="text" id="username" [(ngModel)]="editUserData.username" name="username" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rol" class="form-label"><strong>Rol:</strong></label>
+                        <select *ngIf="editUserData.rol" id="rol" [(ngModel)]="editUserData.rol" name="rol" class="form-control">
+                            <option value="administrador">Administrador</option>
+                            <option value="entrenador">Entrenador</option>
+                            <option value="entrenado">Entrenado</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label"><strong>Contraseña:</strong></label>
+                        <input type="password" id="password" [(ngModel)]="editUserData.password" name="password" class="form-control">
+                      </div>
+                    <div class="mb-3">
+                      <label for="avatar" class="form-label"><strong>Avatar:</strong></label>
+                      <input type="file" id="avatar" (change)="onFileSelected($event)" class="form-control">
+                    </div>
+          
+                    <!-- Botón para guardar cambios -->
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary ms-2" (click)="editMode = false">Cancelar</button>
+                  </form>
+          
+                  <!-- Vista en modo lectura -->
+                  <div *ngIf="!editMode">
+                    <div class="mb-2">
+                      <strong>Nombre:</strong> {{userData?.first_name}}
+                    </div>
+                    <div class="mb-2">
+                      <strong>Apellido:</strong> {{userData?.last_name}}
+                    </div>
+                    <div class="mb-2">
+                      <strong>Username:</strong> {{userData?.username}}
+                    </div>
+                    <div class="mb-2">
+                      <strong>Email:</strong> {{userData?.email}}
+                    </div>
+                    <div class="mb-2">
+                        <strong>Rol:</strong> {{userData?.rol}}
+                    </div>
+                    <div class="mb-2">
+                      <strong>ID:</strong> {{userData?.id}} <!-- Esto se puede quitar después -->
+                    </div>
+          
+                    <!-- Botón para editar datos personales -->
+                    <button class="btn btn-dark" (click)="editMode = true">
+                      <i class="fas fa-edit"></i> Editar Datos Personales
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
